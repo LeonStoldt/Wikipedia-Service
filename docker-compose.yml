@@ -1,0 +1,9 @@
+version: '3'
+
+services:
+  wikipedia-service:
+    build: service/wikipedia.py
+    volumes:
+      - ./service:/usr/src/app
+    ports:
+    - 8006:8006
