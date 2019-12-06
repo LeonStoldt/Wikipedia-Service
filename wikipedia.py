@@ -1,32 +1,29 @@
-from flask import Flask, request
+from flask import Flask, request, Response
+from flask_restful import Resource, Api
 import wikipediaapi
 
 app = Flask(__name__)
+api = Api(app)
 wiki = wikipediaapi.Wikipedia('de')
 
 
-@app.route('/')
-def get_status():
-    return 'WikipediaService is running'
+class Status(Resource):
+    def get(self):
+        return 'WikipediaService is running'
 
 
-@app.route('/api', methods=['POST'])
-def receive_request():
-    data = request.data
-    page = wiki.page(data)
+class Answer(Resource):
+    def post(self):
+        page = wiki.page(request.data)
+        if page.exists():
+            message = '*{0}*\n{1}\n\n{2}'.format(page.title, page.summary, page.fullurl)
+        else:
+            message = "Leider konnte ich kein passendes Ergebnis finden. Bitte überprüfe, ob du dich vertippt hast."
+        return Response(message, mimetype='application/json')
 
-    if page.exists():
-        page_title = page.title
-        page_summary = page.summary
-        url = page.fullurl
-        message = '*{title}*\n{summary}\n\n{link}' \
-            .replace('{title}', page_title) \
-            .replace('{summary}', page_summary) \
-            .replace('{link}', url)
-    else:
-        message = "Leider konnte ich kein passendes Ergebnis finden. Bitte überprüfe, ob du dich nicht vertippt hast."
-    return message
 
+api.add_resource(Status, "/")
+api.add_resource(Answer, "/api")
 
 if __name__ == '__main__':
-    app.run(port=8095, debug=True)
+    app.run(port=8006, debug=True)
