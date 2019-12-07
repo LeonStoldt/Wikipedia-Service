@@ -2,7 +2,7 @@ version: '3'
 
 services:
   wikipedia-service:
-    build: service/wikipedia.py
+    build: ./service
     volumes:
       - ./service:/usr/src/app
     ports:
