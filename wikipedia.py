@@ -26,4 +26,4 @@ api.add_resource(Status, "/")
 api.add_resource(Answer, "/api")
 
 if __name__ == '__main__':
-    app.run(port=8006, debug=True)
+    app.run(port=8080, debug=True)
