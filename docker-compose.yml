@@ -1,9 +1,0 @@
-version: '3'
-
-services:
-  wikipedia-service:
-    build: ./service
-    volumes:
-      - ./service:/usr/src/app
-    ports:
-    - 8006:8006
